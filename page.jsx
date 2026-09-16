@@ -1,77 +1,92 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function Dashboard() {
+export default function Register() {
   const router = useRouter();
 
-  const [name, setName] = useState("User");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    const loggedIn = localStorage.getItem("isLoggedIn");
+  function handleRegister(event) {
+    event.preventDefault();
 
-    if (loggedIn !== "true") {
-      router.push("/login");
+    if (!name || !email || !password) {
+      alert("Please fill in all fields.");
       return;
     }
 
-    setName(localStorage.getItem("userName") || "User");
-    setEmail(localStorage.getItem("userEmail") || "");
-  }, [router]);
+    localStorage.setItem("userName", name);
+    localStorage.setItem("userEmail", email);
+    localStorage.setItem("isLoggedIn", "true");
 
-  function handleLogout() {
-    localStorage.removeItem("isLoggedIn");
-    router.push("/login");
+    router.push("/dashboard");
   }
 
   return (
-    <main className="dashboard-page">
+    <main className="auth-page">
 
       <nav className="navbar">
-
-        <h2 className="logo">
-          🔐 AUTH PORTAL
-        </h2>
-
-        <button
-          className="logout-button"
-          onClick={handleLogout}
-        >
-          LOGOUT
-        </button>
-
+        <h2 className="logo">🔐 AUTH PORTAL</h2>
       </nav>
 
-      <div className="dashboard-container">
+      <div className="auth-container">
 
-        <h1>Dashboard</h1>
+        <div className="auth-card">
 
-        <div className="dashboard-card">
+          <h1>Create Account</h1>
 
-          <h2>
-            Welcome, {name}! 👋
-          </h2>
+          <p className="subtitle">
+            Register to get started
+          </p>
 
-          <div className="user-info">
+          <form onSubmit={handleRegister}>
 
-            <p>
-              <strong>👤 Name:</strong> {name}
-            </p>
+            <label>Name</label>
 
-            <p>
-              <strong>📧 Email:</strong> {email}
-            </p>
+            <input
+              type="text"
+              placeholder="Your Name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
 
-            <p>
-              <strong>Authentication:</strong>{" "}
-              <span className="success">
-                ✓ Logged In
-              </span>
-            </p>
+            <label>Email</label>
 
-          </div>
+            <input
+              type="email"
+              placeholder="Your Email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+
+            <label>Password</label>
+
+            <input
+              type="password"
+              placeholder="Create a password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+
+            <button
+              type="submit"
+              className="primary-button"
+            >
+              REGISTER
+            </button>
+
+          </form>
+
+          <p className="bottom-text">
+            Already registered?{" "}
+            <Link href="/login">
+              Login
+            </Link>
+          </p>
 
         </div>
 
